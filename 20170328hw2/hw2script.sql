@@ -6,8 +6,8 @@ SELECT COUNT(DISTINCT birthCountry)
 FROM Master;
 #3
 SELECT yearID,playerID
-FROM Pitching p
-WHERE (p.HR>=50 AND p.HR<=60);
+FROM Batting b
+WHERE (b.HR>=50 AND b.HR<=60);
 #4
 select count(distinct `park.name`) as ParkName_withStadium_cnt
 from Parks p
@@ -26,7 +26,7 @@ group by s.yearID;
 #8
 select s.yearID,s.playerID
 from (select max(s2.salary) as s2maxsalary , s2.yearID from Salaries s2 group by s2.yearID)as s3, Salaries s
-where s.yearID = s3.yearID and s.salary =  s3.s2maxsalary; #the upper is condensed and aliased as s3# 
+where s.yearID = s3.yearID and s.salary =  s3.s2maxsalary; #the upper is condensed and aliased as s3# 	
 #curse during 1920~2004
 #9-1 the highest paid Gameplayer during these days
 select nameFirst,nameLast

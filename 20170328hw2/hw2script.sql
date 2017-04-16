@@ -25,12 +25,17 @@ and (c.schoolID=s.schoolID);
 select avg(salary) as avgSalary ,max(salary) as maxSalary ,yearID as years
 from Salaries s
 group by s.yearID;
-#8
-select s.yearID,s.playerID
-from (select max(s2.salary) as s2maxsalary , s2.yearID from Salaries s2 group by s2.yearID)as s3, Salaries s
-where s.yearID = s3.yearID 
-and s.salary =  s3.s2maxsalary; #the upper is condensed and aliased as s3# 	
 
+#7-2 practice
+select s.salary,s.playerID
+from Salaries s
+where s.salary in(select max(s2.salary) from Salaries s2);
+#8
+select s.yearID,s.playerID,m.nameFirst,m.nameLast
+from (select max(s2.salary) as s2maxsalary , s2.yearID from Salaries s2 group by s2.yearID)as s3, Salaries s , Master m
+where s.yearID = s3.yearID 
+and s.salary =  s3.s2maxsalary #the upper is condensed and aliased as s3# 	
+and m.playerID =  s.playerID;
 #10 Why is SuzukiIchiro a good player?
 select playerID
 from Master m
@@ -56,7 +61,7 @@ order by avgteamsalary desc;
 #9-1 the highest paid Gameplayer during these days
 #curse during 1920~2004
 select distinct p.playerID
-from Salaries s,Teams t,Pitching p,(select max(s2.salary),s2.playerID from Salaries s2 group by s2.yearID) as s2maxsalary_g_year
+from Salaries s,Teams t,Pitching p,(select max(s2.salary),s2.playerID from Salaries s2 group by s2.yearID,s2.playerID) as s2maxsalary_g_year
 where 
 p.teamID=t.teamID
 and t.WSWin='Y'
@@ -64,7 +69,7 @@ and t.yearID >=1920 and t.yearID<=2004
 and p.playerID=s2maxsalary_g_year.playerID 
 union
 select distinct b.playerID
-from Salaries s,Teams t,Batting b,(select max(s3.salary),s3.playerID from Salaries s3 group by s3.yearID) as s3maxsalary_g_year
+from Salaries s,Teams t,Batting b,(select max(s3.salary),s3.playerID,s3.yearID from Salaries s3 group by s3.yearID,s3.playerID) as s3maxsalary_g_year
 where 
 b.teamID=t.teamID 
 and t.WSWin='Y'

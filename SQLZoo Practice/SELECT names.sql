@@ -18,4 +18,15 @@ WHERE world.name = world.capital;
 #12
 
 SELECT name FROM world  
-WHERE capital = concat(name, ' City');  
+WHERE capital = concat(name, ' City');
+
+#13
+
+
+SELECT capital,name
+FROM world  
+WHERE capital like concat('%',name,'%');
+#14
+SELECT name,capital
+FROM world  
+WHERE capital like concat('%',name, '%')  and capital!=name  ;

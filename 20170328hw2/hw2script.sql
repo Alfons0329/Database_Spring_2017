@@ -30,6 +30,23 @@ group by s.yearID;
 select s.salary,s.playerID
 from Salaries s
 where s.salary in(select max(s2.salary) from Salaries s2);
+
+#7-3practice
+select max(s.salary),s.yearID
+from Salaries s
+group by s.yearID
+having  (s.salary)>30000000;  /*FOR THE Group qualification*/
+#7-3 Compare
+select (s.salary),s.yearID
+from Salaries s
+group by s.yearID,s.salary
+having s.salary>30000000;
+#7-4 group from different table to find the max salary for each of the name combinations
+#wrt the team name
+select(s.salary),tf.franchName
+from Salaries s,TeamsFranchises tf
+group by s.salary,tf.franchName;
+#7-5每一個球隊給過得最高薪水
 #8
 select s.yearID,s.playerID,m.nameFirst,m.nameLast
 from (select max(s2.salary) as s2maxsalary , s2.yearID from Salaries s2 group by s2.yearID)as s3, Salaries s , Master m
@@ -51,7 +68,7 @@ where ichiros.playerID = 'suzukic01';
 
 #11 Bonus problem
 #The statistics for payment of each team
-select tf.franchName, avg(s.salary) as avgteamsalary
+select tf.franchName, max(s.salary) as avgteamsalary
 from Salaries s ,Teams t ,TeamsFranchises tf
 where (t.teamID = s.teamID 
 and t.franchID = tf.franchID)

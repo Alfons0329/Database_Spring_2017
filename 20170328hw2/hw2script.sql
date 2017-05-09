@@ -11,32 +11,37 @@ WHERE (b.HR>=50 AND b.HR<=60);
 #4
 select count(distinct `park.name`) as ParkName_withStadium_cnt
 from Parks p
-where p.`park.name` like '%Stadium%';
+where p.`park.name` like '%Stadium%';#萬用字元與like一併使用
 #5
-select avg(datediff(finalGame,debut))/365 as year_diff
+select avg(datediff(finalGame,debut))/365 as year_diff #mathematical expr accept
 from Master;
 #6
 select distinct name_full as School_fullName
 from Schools s,Master m,CollegePlaying c
 where m.debut like '%2000-05%' 
 and (m.playerID=c.playerID) 
-and (c.schoolID=s.schoolID);
-#7
+and (c.schoolID=s.schoolID); #JOIN 的概念 對應同一物品
+
+#6-1 use join to rewrite question6
+select distinct Schools.name_full as School_fullName
+from (Schools natural join Master natural join CollegePlaying)  
+where Master.debut like '%2000-05%'; #After join we can simply query from the table who take part in the join procedure
+#7每年平均與最高薪的薪水是多少
 select avg(salary) as avgSalary ,max(salary) as maxSalary ,yearID as years
 from Salaries s
 group by s.yearID;
 
-#7-2 practice
+#7-2 practice把上一題改成巢狀的
 select s.salary,s.playerID
 from Salaries s
 where s.salary in(select max(s2.salary) from Salaries s2);
 
-#7-3practice
+#7-3practice this will be wrong since //錯誤，因為having裡面的attri必須要從group裡面抓來作為準則
 select max(s.salary),s.yearID
 from Salaries s
 group by s.yearID
 having  (s.salary)>30000000;  /*FOR THE Group qualification*/
-#7-3 Compare
+#7-3-1 Compare //正確的寫法
 select (s.salary),s.yearID
 from Salaries s
 group by s.yearID,s.salary
@@ -46,12 +51,27 @@ having s.salary>30000000;
 select(s.salary),tf.franchName
 from Salaries s,TeamsFranchises tf
 group by s.salary,tf.franchName;
-#7-5每一個球隊給過得最高薪水
+#7-5每一個球隊給過得最高薪水(revised from the last 7-4 problem)
+select tf.franchName, max(s.salary) as maxteamsalary
+from Salaries s ,Teams t ,TeamsFranchises tf
+where (t.teamID = s.teamID 
+and t.franchID = tf.franchID)
+group by tf.franchName
+order by maxteamsalary desc;
+#7-5 ends here
+#7-5 use JOIN operator to rewrite
+select tf.franchName, max(s.salary) as maxteamsalary
+from Salaries s inner join Teams t on(s.teamID=t.teamID) inner join TeamsFranchises tf on(t.franchID=tf.franchID)   #mySQL requires the inner join with on operator to distinguish the req.
+where tf.franchName like'%Washington%'
+group by tf.franchName
+order by maxteamsalary desc;
+
 #8
 select s.yearID,s.playerID,m.nameFirst,m.nameLast
-from (select max(s2.salary) as s2maxsalary , s2.yearID from Salaries s2 group by s2.yearID)as s3, Salaries s , Master m
-where s.yearID = s3.yearID 
-and s.salary =  s3.s2maxsalary #the upper is condensed and aliased as s3# 	
+from (select max(s2.salary) as s2maxsalary , s2.yearID from Salaries s2 group by s2.yearID)as s3 #here takes each year's max salary
+, Salaries s , Master m
+where s.yearID = s3.yearID #take each year of max salary contains
+and s.salary =  s3.s2maxsalary #and since it has been grouped, so we take the maxsalary out 	
 and m.playerID =  s.playerID;
 #10 Why is SuzukiIchiro a good player?
 select playerID

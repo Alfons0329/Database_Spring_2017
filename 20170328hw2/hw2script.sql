@@ -112,3 +112,9 @@ b.teamID=t.teamID
 and t.WSWin='Y'
 and t.yearID >=1920 and t.yearID<=2004
 and b.playerID=s3maxsalary_g_year.playerID; 
+
+#11 bonus from cty(friend) 在歷屆世界大賽中,贏得最多冠軍數的是哪一個隊伍。			
+SELECT	Compare.teamID,	Compare.T	
+FROM(SELECT	teamID,count(*)	AS	T FROM	Teams	WHERE	WSWin	=	'Y'	GROUP	BY	teamID)	AS	Compare,
+(SELECT	MAX(WS.Times)	AS	MOST	FROM	(SELECT	count(*)	AS	Times	FROM	Teams	WHERE	WSWin	=	'Y'	GROUP	BY	teamID)	AS	WS)	AS	MOSTWIN	
+WHERE Compare.T	=	MOSTWIN.MOST;	

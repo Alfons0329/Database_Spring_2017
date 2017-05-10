@@ -1,0 +1,70 @@
+1. select count(*) from users
+363
+
+2. select ((select count(*) from players where foreigner=1)/(select count(*) from players)*100)
+0.96%
+
+3. SELECT count(*) FROM `users` WHERE school like "%交通%"
+14
+
+4. select min(timestamp),max(timestamp) from teams where category="bad"
+2016-11-26 00:12:55
+2016-12-07 11:54:43
+
+5. select DATE_FORMAT(timestamp,"%Y-%m-%d"),count(*) num from teams group by DATE_FORMAT(timestamp,"%Y-%m-%d") order by DATE_FORMAT(timestamp,"%Y-%m-%d")
+2016-11-26	46
+2016-11-27	14
+2016-11-28	11
+2016-11-29	11
+2016-11-30	29
+2016-12-01	55
+2016-12-02	75
+2016-12-05	40
+2016-12-06	11
+2016-12-07	7
+2016-12-08	2
+2016-12-09	6
+
+6. SELECT category,count(*) num FROM `teams` 
+join players on teams.tid=players.tid
+where teams.success=1
+group by teams.category
+
+bad	309
+b_bas	1385
+b_vol	832
+g_bas	253
+g_vol	428
+sof	333
+tab	174
+
+7. select DATE_FORMAT(birthday,"%m-%d"),count(*) num  from players group by DATE_FORMAT(birthday,"%m-%d") order by num desc limit 10
+09-18 24
+11-20 19
+09-16 19
+12-02 19
+11-27 18
+07-06 18
+11-22 18
+10-09 18
+12-22 18
+11-25 18
+還有一組不輸出沒關係
+
+8. select users.email from users join teams on teams.uid=users.uid join players on players.tid=teams.tid where players.pid=3141
+5f045289@gmail.com
+
+9,10  select A.realname,A.id_num,A.teamname,A.category,B.teamname,B.category 
+from 
+(select teams.tid,teams.category,teams.teamname,players.id_num,players.realname from teams 
+join players on teams.tid=players.tid where teams.success=1) A
+join 
+(select teams.tid,teams.category,teams.teamname,players.id_num,players.realname from teams 
+join players on teams.tid=players.tid where teams.success=1) B
+on A.id_num=B.id_num
+where A.tid!=B.tid
+
+150筆
+
+
+

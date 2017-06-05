@@ -1,0 +1,6 @@
+create table team(team_team_id int,category varchar(16))
+insert into team(team_team_id,category) values(1,'badminton')
+insert into team(team_team_id,category) values(2,'volleyball')
+insert into team(team_team_id,category) values(3,'badminton')
+insert into team(team_team_id,category) values(4,'volleyball')
+insert into team(team_team_id,category) values(5,'basketball')
